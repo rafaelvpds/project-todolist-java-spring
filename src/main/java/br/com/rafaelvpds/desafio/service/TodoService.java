@@ -23,7 +23,7 @@ public class TodoService {
     }
 
     public List<TodoList> findAll() {
-        Sort sort = Sort.by("prioridade").descending().and(
+        Sort sort = Sort.by("priority").descending().and(
                 Sort.by("name").ascending());
         return todoRepository.findAll(sort);
     }
@@ -39,17 +39,17 @@ public class TodoService {
         return todoRepository.save(newTodoList);
     }
 
-    public List<TodoList> delte(Long id) {
+    public void delte(Long id) {
         todoRepository.deleteById(id);
-
-        return findAll();
     }
 
     private final void upadateData(TodoList newTodoList, TodoList todoList) {
+
         newTodoList.setName(todoList.getName());
-        newTodoList.setDescricao(todoList.getDescricao());
-        newTodoList.setRealizados(todoList.getRealizados());
-        newTodoList.setPrioridade(todoList.getPrioridade());
+        newTodoList.setDescription(todoList.getDescription());
+        newTodoList.setIsCompleted(todoList.getIsCompleted());
+        newTodoList.setPriority(todoList.getPriority());
+        newTodoList.setStatusTodos(todoList.getStatusTodos());
     }
 
 }

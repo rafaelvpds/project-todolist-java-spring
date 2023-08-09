@@ -1,7 +1,7 @@
 package br.com.rafaelvpds.desafio.enums;
 
 public enum StatusTodos {
-    WORK(1), STUDY(2), PERSONAL(3);
+    WORK(0), STUDY(1), PERSONAL(2);
 
     private int code;
 

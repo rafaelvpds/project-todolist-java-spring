@@ -2,6 +2,7 @@ package br.com.rafaelvpds.desafio.controller;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.rafaelvpds.desafio.dtos.TodoListDto;
 import br.com.rafaelvpds.desafio.entities.TodoList;
 import br.com.rafaelvpds.desafio.service.TodoService;
 
@@ -27,7 +29,8 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity<List<TodoList>> create(@RequestBody TodoList todoList) {
-        return ResponseEntity.ok().body(todoService.create(todoList));
+        todoList.setIsCompleted(false);
+        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.create(todoList));
     }
 
     @GetMapping
@@ -36,7 +39,9 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TodoList> update(@PathVariable("id") Long id, @RequestBody TodoList todoList) {
+    public ResponseEntity<TodoList> update(@PathVariable("id") Long id, @RequestBody TodoListDto todoListDto) {
+        var todoList = new TodoList();
+        BeanUtils.copyProperties(todoListDto, todoList);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(todoService.update(id, todoList));
     }

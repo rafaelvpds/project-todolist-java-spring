@@ -18,22 +18,21 @@ public class TodoList implements Serializable {
     private Long id;
 
     private String name;
-    private String descricao;
-    private Boolean realizados;
-    private int prioridade;
-    private Integer statusTodos;
+    private String description;
+    private Boolean isCompleted;
+    private int priority;
+    private int statusTodos;
 
     public TodoList() {
 
     }
 
-    public TodoList(String name, String descricao, Boolean realizados, int prioridade, Integer statusTodos) {
-
+    public TodoList(String name, String description, Boolean isCompleted, int priority, StatusTodos statusTodos) {
         this.name = name;
-        this.descricao = descricao;
-        this.realizados = realizados;
-        this.prioridade = prioridade;
-        this.statusTodos = statusTodos;
+        this.description = description;
+        this.isCompleted = isCompleted;
+        this.priority = priority;
+        setStatusTodos(statusTodos);
     }
 
     public Long getId() {
@@ -48,32 +47,28 @@ public class TodoList implements Serializable {
         this.name = name;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Boolean getRealizados() {
-        return realizados;
+    public Boolean getIsCompleted() {
+        return isCompleted;
     }
 
-    public void setRealizados(Boolean realizados) {
-        this.realizados = realizados;
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
     }
 
-    public int getPrioridade() {
-        return prioridade;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setPrioridade(int prioridade) {
-        this.prioridade = prioridade;
-    }
-
-    public Boolean isRealizados() {
-        return this.realizados;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public StatusTodos getStatusTodos() {
@@ -84,7 +79,10 @@ public class TodoList implements Serializable {
         if (statusTodos != null) {
 
             this.statusTodos = statusTodos.getCode();
+        } else {
+            System.out.println("Deu erro");
         }
+
     }
 
 }
