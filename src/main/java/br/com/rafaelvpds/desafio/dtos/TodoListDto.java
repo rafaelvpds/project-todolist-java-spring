@@ -1,8 +1,16 @@
 package br.com.rafaelvpds.desafio.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
-public record TodoListDto(@NotEmpty String name, @NotEmpty String description, int priority,
-                int statusTodos) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+public record TodoListDto(
+        @NotNull @NotBlank @Length(min = 5, max = 50) String title,
+        @NotNull @NotBlank @Length(min = 5, max = 50) String description,
+        @NotNull @NotBlank Boolean isCompleted,
+        @NotNull @NotBlank @Pattern(regexp = "WORK|STUDY|PERSONAL") String category,
+        @NotNull @NotBlank @Pattern(regexp = "STOPED|PROGRESS|FINISHED") String statusTodo) {
 
 }

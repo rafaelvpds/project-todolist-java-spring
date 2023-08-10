@@ -34,12 +34,19 @@ public class TodoList implements Serializable {
     @Column(length = 50, nullable = false)
     private String description;
 
+    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private Boolean isCompleted = false;
 
+    @NotNull
+    @NotBlank
     @Column(nullable = false)
     @Pattern(regexp = "WORK|STUDY|PERSONAL")
     private String category;
+
+    @NotNull
+    @NotBlank
     @Pattern(regexp = "STOPED|PROGRESS|FINISHED")
     private String statusTodo;
 

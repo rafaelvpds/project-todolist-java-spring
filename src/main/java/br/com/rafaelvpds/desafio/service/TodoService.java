@@ -1,13 +1,13 @@
 package br.com.rafaelvpds.desafio.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.rafaelvpds.desafio.entities.TodoList;
+import br.com.rafaelvpds.desafio.exeption.RecordNotFaundExeption;
 import br.com.rafaelvpds.desafio.repository.TodoRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -29,12 +29,13 @@ public class TodoService {
         return todoRepository.findAll(sort);
     }
 
-    public Optional<TodoList> findById(@NotNull @Positive Long id) {
+    public TodoList findById(@NotNull @Positive Long id) {
 
-        return todoRepository.findById(id);
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFaundExeption(id));
     }
 
-    public Optional<TodoList> update(Long id, TodoList todoList) {
+    public TodoList update(Long id, TodoList todoList) {
         return todoRepository.findById(id)
                 .map(todoListFound -> {
                     todoListFound.setTitle(todoList.getTitle());
@@ -44,17 +45,15 @@ public class TodoService {
                     todoListFound.setCategory(todoList.getCategory());
 
                     return todoRepository.save(todoListFound);
-                });
+                })
+                .orElseThrow(() -> new RecordNotFaundExeption(id));
 
     }
 
-    public boolean delete(Long id) {
-        return todoRepository.findById(id)
-                .map(todoFaund -> {
-                    todoRepository.deleteById(id);
-                    return true;
-                })
-                .orElse(false);
+    public void delete(Long id) {
+        todoRepository.delete(todoRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFaundExeption(id)));
+        todoRepository.findById(id);
 
     }
 }

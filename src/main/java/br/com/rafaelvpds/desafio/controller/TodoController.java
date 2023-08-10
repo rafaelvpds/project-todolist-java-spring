@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rafaelvpds.desafio.entities.TodoList;
@@ -44,29 +45,22 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TodoList> findById(@PathVariable @NotNull @Positive Long id) {
-        return todoService.findById(id)
-                .map(todoFound -> ResponseEntity.ok().body(todoFound))
-                .orElse(ResponseEntity.notFound().build());
+    public TodoList findById(@PathVariable @NotNull @Positive Long id) {
+        return todoService.findById(id);
 
     }
 
     @PutMapping("/{id}")
-
-    public ResponseEntity<TodoList> update(@PathVariable("id") @NotNull @Positive Long id,
+    public TodoList update(@PathVariable("id") @NotNull @Positive Long id,
             @RequestBody @Valid TodoList todoList) {
 
-        return todoService.update(id, todoList)
-                .map(todoFound -> ResponseEntity.ok().body(todoFound))
-                .orElse(ResponseEntity.notFound().build());
+        return todoService.update(id, todoList);
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @Positive Long id) {
-        if (todoService.delete(id)) {
-            return ResponseEntity.noContent().<Void>build();
-        }
-        return ResponseEntity.notFound().build();
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") @NotNull @Positive Long id) {
+        todoService.delete(id);
     }
 }
