@@ -2,10 +2,10 @@ package br.com.rafaelvpds.desafio.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.rafaelvpds.desafio.dtos.TodoListDto;
 import br.com.rafaelvpds.desafio.entities.TodoList;
 import br.com.rafaelvpds.desafio.service.TodoService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
+@Validated
 @RestController
 @RequestMapping("/todos")
 @CrossOrigin(origins = "*")
@@ -28,27 +32,41 @@ public class TodoController {
     private TodoService todoService;
 
     @PostMapping
-    public ResponseEntity<List<TodoList>> create(@RequestBody TodoList todoList) {
+    public ResponseEntity<TodoList> create(@RequestBody @Valid TodoList todoList) {
+
         todoList.setIsCompleted(false);
         return ResponseEntity.status(HttpStatus.CREATED).body(todoService.create(todoList));
     }
 
     @GetMapping
-    public ResponseEntity<List<TodoList>> list() {
-        return ResponseEntity.ok().body(todoService.findAll());
+    public @ResponseBody List<TodoList> list() {
+        return todoService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TodoList> findById(@PathVariable @NotNull @Positive Long id) {
+        return todoService.findById(id)
+                .map(todoFound -> ResponseEntity.ok().body(todoFound))
+                .orElse(ResponseEntity.notFound().build());
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TodoList> update(@PathVariable("id") Long id, @RequestBody TodoListDto todoListDto) {
-        var todoList = new TodoList();
-        BeanUtils.copyProperties(todoListDto, todoList);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.update(id, todoList));
+    public ResponseEntity<TodoList> update(@PathVariable("id") @NotNull @Positive Long id,
+            @RequestBody @Valid TodoList todoList) {
+
+        return todoService.update(id, todoList)
+                .map(todoFound -> ResponseEntity.ok().body(todoFound))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        todoService.delte(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @Positive Long id) {
+        if (todoService.delete(id)) {
+            return ResponseEntity.noContent().<Void>build();
+        }
+        return ResponseEntity.notFound().build();
+
     }
 }

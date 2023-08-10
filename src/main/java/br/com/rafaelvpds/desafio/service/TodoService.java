@@ -3,53 +3,58 @@ package br.com.rafaelvpds.desafio.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.rafaelvpds.desafio.entities.TodoList;
 import br.com.rafaelvpds.desafio.repository.TodoRepository;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Service
 public class TodoService {
     @Autowired
     private TodoRepository todoRepository;
 
-    public List<TodoList> create(TodoList todoList) {
-        todoRepository.save(todoList);
-        return findAll();
+    public TodoList create(TodoList todoList) {
+
+        return todoRepository.save(todoList);
 
     }
 
     public List<TodoList> findAll() {
-        Sort sort = Sort.by("priority").descending().and(
-                Sort.by("name").ascending());
+        Sort sort = Sort.by("statusTodo").descending().and(
+                Sort.by("title").ascending());
         return todoRepository.findAll(sort);
     }
 
-    public TodoList findById(Long id) {
-        Optional<TodoList> optionalTodo = todoRepository.findById(id);
-        return optionalTodo.orElseThrow(() -> new ObjectNotFoundException("id, not found", id));
+    public Optional<TodoList> findById(@NotNull @Positive Long id) {
+
+        return todoRepository.findById(id);
     }
 
-    public TodoList update(Long id, TodoList todoList) {
-        TodoList newTodoList = findById(id);
-        upadateData(newTodoList, todoList);
-        return todoRepository.save(newTodoList);
+    public Optional<TodoList> update(Long id, TodoList todoList) {
+        return todoRepository.findById(id)
+                .map(todoListFound -> {
+                    todoListFound.setTitle(todoList.getTitle());
+                    todoListFound.setDescription(todoList.getDescription());
+                    todoListFound.setIsCompleted(todoList.getIsCompleted());
+                    todoListFound.setStatusTodo(todoList.getStatusTodo());
+                    todoListFound.setCategory(todoList.getCategory());
+
+                    return todoRepository.save(todoListFound);
+                });
+
     }
 
-    public void delte(Long id) {
-        todoRepository.deleteById(id);
+    public boolean delete(Long id) {
+        return todoRepository.findById(id)
+                .map(todoFaund -> {
+                    todoRepository.deleteById(id);
+                    return true;
+                })
+                .orElse(false);
+
     }
-
-    private final void upadateData(TodoList newTodoList, TodoList todoList) {
-
-        newTodoList.setName(todoList.getName());
-        newTodoList.setDescription(todoList.getDescription());
-        newTodoList.setIsCompleted(todoList.getIsCompleted());
-        newTodoList.setPriority(todoList.getPriority());
-        newTodoList.setStatusTodos(todoList.getStatusTodos());
-    }
-
 }

@@ -2,12 +2,17 @@ package br.com.rafaelvpds.desafio.entities;
 
 import java.io.Serializable;
 
-import br.com.rafaelvpds.desafio.enums.StatusTodos;
+import org.hibernate.validator.constraints.Length;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "todos")
@@ -17,34 +22,50 @@ public class TodoList implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @NotNull
+    @NotBlank
+    @Length(min = 5, max = 50)
+    @Column(length = 25, nullable = false)
+    private String title;
+
+    @NotNull
+    @NotBlank
+    @Length(min = 5, max = 50)
+    @Column(length = 50, nullable = false)
     private String description;
-    private Boolean isCompleted;
-    private int priority;
-    private int statusTodos;
+
+    @Column(nullable = false)
+    private Boolean isCompleted = false;
+
+    @Column(nullable = false)
+    @Pattern(regexp = "WORK|STUDY|PERSONAL")
+    private String category;
+    @Pattern(regexp = "STOPED|PROGRESS|FINISHED")
+    private String statusTodo;
 
     public TodoList() {
-
     }
 
-    public TodoList(String name, String description, Boolean isCompleted, int priority, StatusTodos statusTodos) {
-        this.name = name;
+    public TodoList(String title, String description, Boolean isCompleted, String category,
+            String statusTodo) {
+        this.title = title;
         this.description = description;
         this.isCompleted = isCompleted;
-        this.priority = priority;
-        setStatusTodos(statusTodos);
+        this.statusTodo = statusTodo;
+        this.category = category;
+
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -63,26 +84,20 @@ public class TodoList implements Serializable {
         this.isCompleted = isCompleted;
     }
 
-    public int getPriority() {
-        return priority;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public StatusTodos getStatusTodos() {
-        return StatusTodos.valueOf(statusTodos);
+    public String getStatusTodo() {
+        return statusTodo;
     }
 
-    public void setStatusTodos(StatusTodos statusTodos) {
-        if (statusTodos != null) {
-
-            this.statusTodos = statusTodos.getCode();
-        } else {
-            System.out.println("Deu erro");
-        }
-
+    public void setStatusTodo(String statusTodo) {
+        this.statusTodo = statusTodo;
     }
 
 }
