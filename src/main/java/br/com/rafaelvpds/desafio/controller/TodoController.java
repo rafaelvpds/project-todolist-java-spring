@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.rafaelvpds.desafio.entities.TodoList;
+import br.com.rafaelvpds.desafio.dtos.TodoListDto;
 import br.com.rafaelvpds.desafio.service.TodoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -33,26 +33,25 @@ public class TodoController {
     private TodoService todoService;
 
     @PostMapping
-    public ResponseEntity<TodoList> create(@RequestBody @Valid TodoList todoList) {
+    public ResponseEntity<TodoListDto> create(@RequestBody @Valid TodoListDto todoList) {
 
-        todoList.setIsCompleted(false);
         return ResponseEntity.status(HttpStatus.CREATED).body(todoService.create(todoList));
     }
 
     @GetMapping
-    public @ResponseBody List<TodoList> list() {
+    public @ResponseBody List<TodoListDto> list() {
         return todoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public TodoList findById(@PathVariable @NotNull @Positive Long id) {
+    public TodoListDto findById(@PathVariable @NotNull @Positive Long id) {
         return todoService.findById(id);
 
     }
 
     @PutMapping("/{id}")
-    public TodoList update(@PathVariable("id") @NotNull @Positive Long id,
-            @RequestBody @Valid TodoList todoList) {
+    public TodoListDto update(@PathVariable("id") @NotNull @Positive Long id,
+            @RequestBody @Valid TodoListDto todoList) {
 
         return todoService.update(id, todoList);
 

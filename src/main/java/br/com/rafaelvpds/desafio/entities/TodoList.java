@@ -34,10 +34,8 @@ public class TodoList implements Serializable {
     @Column(length = 50, nullable = false)
     private String description;
 
-    @NotNull
-    @NotBlank
     @Column(nullable = false)
-    private Boolean isCompleted = false;
+    private boolean isCompleted;
 
     @NotNull
     @NotBlank
@@ -53,7 +51,7 @@ public class TodoList implements Serializable {
     public TodoList() {
     }
 
-    public TodoList(String title, String description, Boolean isCompleted, String category,
+    public TodoList(String title, String description, boolean isCompleted, String category,
             String statusTodo) {
         this.title = title;
         this.description = description;
@@ -83,11 +81,11 @@ public class TodoList implements Serializable {
         this.description = description;
     }
 
-    public Boolean getIsCompleted() {
+    public boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setIsCompleted(Boolean isCompleted) {
+    public void setIsCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 
