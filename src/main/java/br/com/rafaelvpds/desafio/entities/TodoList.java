@@ -4,7 +4,12 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.Length;
 
+import br.com.rafaelvpds.desafio.enums.CategoryTodo;
+import br.com.rafaelvpds.desafio.enums.StatusTodo;
+import br.com.rafaelvpds.desafio.enums.converters.CategoryConverter;
+import br.com.rafaelvpds.desafio.enums.converters.StatusTodoConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "todos")
@@ -38,21 +42,20 @@ public class TodoList implements Serializable {
     private boolean isCompleted;
 
     @NotNull
-    @NotBlank
-    @Column(nullable = false)
-    @Pattern(regexp = "WORK|STUDY|PERSONAL")
-    private String category;
 
-    @NotNull
-    @NotBlank
-    @Pattern(regexp = "STOPED|PROGRESS|FINISHED")
-    private String statusTodo;
+    @Column(nullable = false)
+
+    @Convert(converter = CategoryConverter.class)
+    private CategoryTodo category;
+
+    @Convert(converter = StatusTodoConverter.class)
+    private StatusTodo statusTodo;
 
     public TodoList() {
     }
 
-    public TodoList(String title, String description, boolean isCompleted, String category,
-            String statusTodo) {
+    public TodoList(String title, String description, boolean isCompleted, CategoryTodo category,
+            StatusTodo statusTodo) {
         this.title = title;
         this.description = description;
         this.isCompleted = isCompleted;
@@ -89,19 +92,19 @@ public class TodoList implements Serializable {
         this.isCompleted = isCompleted;
     }
 
-    public String getCategory() {
+    public CategoryTodo getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryTodo category) {
         this.category = category;
     }
 
-    public String getStatusTodo() {
+    public StatusTodo getStatusTodo() {
         return statusTodo;
     }
 
-    public void setStatusTodo(String statusTodo) {
+    public void setStatusTodo(StatusTodo statusTodo) {
         this.statusTodo = statusTodo;
     }
 

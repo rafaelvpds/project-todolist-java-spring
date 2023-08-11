@@ -51,8 +51,8 @@ public class TodoService {
                     todoListFound.setTitle(todoList.title());
                     todoListFound.setDescription(todoList.description());
                     todoListFound.setIsCompleted(todoList.isCompleted());
-                    todoListFound.setStatusTodo(todoList.statusTodo());
-                    todoListFound.setCategory(todoList.category());
+                    todoListFound.setStatusTodo(todoMapper.converterStatusTodo(todoList.statusTodo()));
+                    todoListFound.setCategory(todoMapper.converterCategoryValue(todoList.category()));
 
                     return todoRepository.save(todoListFound);
                 })

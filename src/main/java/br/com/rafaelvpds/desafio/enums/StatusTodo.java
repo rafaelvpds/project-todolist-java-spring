@@ -1,25 +1,22 @@
 package br.com.rafaelvpds.desafio.enums;
 
 public enum StatusTodo {
-    STOPED(0), INPROGRESS(2), FINISHED(3);
+    STOPED("Parado"), PROGRESS("Em andamento"), FINISHED("Concluido");
 
-    private int codeStatus;
+    private String codeStatus;
 
-    private StatusTodo(int codeStatus) {
+    private StatusTodo(String codeStatus) {
         this.codeStatus = codeStatus;
     }
 
-    public int getCodeStatus() {
+    public String getCodeStatus() {
         return codeStatus;
     }
 
-    public static StatusTodo valeOfStatus(int codeStatus) {
-        for (StatusTodo valueStatus : StatusTodo.values()) {
-            if (valueStatus.getCodeStatus() == codeStatus) {
-                return valueStatus;
-            }
+    @Override
 
-        }
-        throw new IllegalArgumentException("Invalid Status todos");
+    public String toString() {
+        return codeStatus;
     }
+
 }

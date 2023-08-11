@@ -1,25 +1,21 @@
 package br.com.rafaelvpds.desafio.enums;
 
 public enum CategoryTodo {
-    WORK(1), STUDY(2), PERSONAL(3);
+    WORK("Trabalho"), STUDY("Estudo"), PERSONAL("Pessoal");
 
-    private int code;
+    private String value;
 
-    private CategoryTodo(int code) {
-        this.code = code;
+    private CategoryTodo(String value) {
+        this.value = value;
     }
 
-    public int getCode() {
-        return code;
+    public String getCategoryTodo() {
+        return value;
     }
 
-    public static CategoryTodo valueOf(int code) {
-        for (CategoryTodo value : CategoryTodo.values()) {
-            if (value.getCode() == code) {
-                return value;
-            }
-        }
-        throw new IllegalArgumentException("Invalid Status Todo");
+    @Override
+    public String toString() {
+        return value;
     }
 
 }
